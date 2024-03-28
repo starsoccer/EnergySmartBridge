@@ -8,7 +8,7 @@ RUN mv /build/bin/Release /app
 
 FROM nginx:1.24.0
 
-RUN apt-get update && apt-get install -y openssl && apt-get install -y mono-devel
+RUN apt-get update && apt-get install -y openssl mono-devel jq
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
@@ -18,6 +18,6 @@ COPY --from=build /app .
 COPY --from=build /app/EnergySmartBridge.ini /config/EnergySmartBridge.ini
 COPY run.sh .
 
-EXPOSE 443/tcp
+EXPOSE 443/tcp 8001/tcp
 
-CMD [ "sh", "run.sh" ]
+CMD [ "bash", "run.sh" ]

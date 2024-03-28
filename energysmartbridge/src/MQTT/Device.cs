@@ -1,5 +1,5 @@
 using Newtonsoft.Json;
-using EnergySmartBridge.Modules;
+using Newtonsoft.Json.Converters;
 
 namespace EnergySmartBridge.MQTT
 {
@@ -14,7 +14,16 @@ namespace EnergySmartBridge.MQTT
 
         public string unique_id { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum EntityCategory
+        {
+            config,
+            diagnostic,
+        }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DeviceRegistry device { get; set; } = MQTTModule.MqttDeviceRegistry;
+        public EntityCategory? entity_category { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DeviceRegistry device { get; set; }
     }
 }

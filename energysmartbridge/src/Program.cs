@@ -1,4 +1,8 @@
-﻿using Mono.Unix;
+﻿using log4net;
+using log4net.Config;
+using log4net.Core;
+using log4net.Repository.Hierarchy;
+using Mono.Unix;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -44,10 +48,16 @@ namespace EnergySmartBridge
                 Global.config_file = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) +
                     Path.DirectorySeparatorChar + "EnergySmartBridge.ini";
 
-            log4net.Config.XmlConfigurator.Configure();
-
+            XmlConfigurator.Configure();
             if (Environment.UserInteractive || interactive)
                 Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
+
+            if (Settings.ShowDebug)
+            {
+                Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
+                hierarchy.Root.Level = Level.Debug;
+                hierarchy.RaiseConfigurationChanged(EventArgs.Empty);
+            }
 
             try
             {

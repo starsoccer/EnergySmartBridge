@@ -10,6 +10,7 @@ namespace EnergySmartBridge.MQTT
         {
             heat,
             problem,
+            moisture,
         }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

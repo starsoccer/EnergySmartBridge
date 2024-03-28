@@ -1,11 +1,20 @@
+#!/bin/bash
 set -e
 
 echo Listing Versions!
 nginx -v
 
-for keyval in $(grep -E '": [^\{]' /data/options.json | sed -e 's/: /=/' -e "s/\(\,\)$//"); do
-    eval export $keyval
-done
+while read key value; do
+    export $key="${value}"
+done < <(jq -r 'to_entries | map(.key + " " + (.value | tostring)) | .[]' /data/options.json)
 
-#envsubst < /nginx.conf.template > /etc/nginx/nginx.conf;
-exec nginx -g 'daemon off;' & mono EnergySmartBridge.exe -i -c /config/EnergySmartBridge.ini -e
+declare -a BRIDGE_ARGS=(
+    "-i"
+    "-c" "/config/EnergySmartBridge.ini"
+    "-e"
+)
+if [ "${DEBUG}" == "true" ]; then
+    BRIDGE_ARGS+=("-d")
+fi
+
+exec nginx -g 'daemon off;' & mono EnergySmartBridge.exe "${BRIDGE_ARGS[@]}"

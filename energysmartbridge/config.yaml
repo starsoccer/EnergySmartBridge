@@ -1,6 +1,6 @@
 name: "Energy Smart Bridge"
 description: "Energy Smart Bridge"
-version: "0.0.5"
+version: "0.0.6"
 slug: "energy_smart_bridge"
 image: "ghcr.io/starsoccer/energysmartbridge/{arch}"
 init: false
@@ -10,6 +10,10 @@ arch:
   - armv7
 ports:
   443/tcp: 443
+  8001/tcp: null
+ports_description:
+  443/tcp: "The HTTPS port to which the EnergySmart dongle will connect. Must be 443."
+  8001/tcp: "The HTTP port of the bridge server. Use if you'll be running your own reverse proxy and terminating SSL elsewhere."
 options:
   MQTT_PORT: 1883
   MQTT_SERVER: null
@@ -17,6 +21,7 @@ options:
   MQTT_PASSWORD: null
   MQTT_PREFIX: "energysmart"
   MQTT_DISCOVERY_PREFIX: "homeassistant"
+  DEBUG: false
 schema:
   MQTT_PORT: port
   MQTT_SERVER: str
@@ -24,3 +29,4 @@ schema:
   MQTT_PASSWORD: password
   MQTT_PREFIX: str
   MQTT_DISCOVERY_PREFIX: str
+  DEBUG: bool
